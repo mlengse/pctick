@@ -1,0 +1,496 @@
+{
+  "liburnas": [
+    {
+      "date": "1 Januari 2021",
+      "ket": "Tahun Baru Masehi",
+      "tahun": "2021",
+      "id": "20210101"
+    },
+    {
+      "date": "12 Februari 2021",
+      "ket": "Tahun Baru Imlek",
+      "tahun": "2021",
+      "id": "20210212"
+    },
+    {
+      "date": "11 Maret 2021",
+      "ket": "Isra Miraj",
+      "tahun": "2021",
+      "id": "20210311"
+    },
+    {
+      "date": "12 Maret 2021",
+      "ket": "Cuti Bersama",
+      "tahun": "2021",
+      "id": "20210312"
+    },
+    {
+      "date": "14 Maret 2021",
+      "ket": "Hari Raya Nyepi",
+      "tahun": "2021",
+      "id": "20210314"
+    },
+    {
+      "date": "2 April 2021",
+      "ket": "Jumat Agung",
+      "tahun": "2021",
+      "id": "20210402"
+    },
+    {
+      "date": "1 Mei 2021",
+      "ket": "Hari Buruh",
+      "tahun": "2021",
+      "id": "20210501"
+    },
+    {
+      "date": "13 Mei 2021",
+      "ket": "Kenaikan Isa Almasih",
+      "tahun": "2021",
+      "id": "20210513"
+    },
+    {
+      "date": "13 Mei 2021",
+      "ket": "Idul Fitri",
+      "tahun": "2021",
+      "id": "20210513"
+    },
+    {
+      "date": "14 Mei 2021",
+      "ket": "Idul Fitri",
+      "tahun": "2021",
+      "id": "20210514"
+    },
+    {
+      "date": "17 Mei 2021",
+      "ket": "Cuti Bersama",
+      "tahun": "2021",
+      "id": "20210517"
+    },
+    {
+      "date": "18 Mei 2021",
+      "ket": "Cuti Bersama",
+      "tahun": "2021",
+      "id": "20210518"
+    },
+    {
+      "date": "19 Mei 2021",
+      "ket": "Cuti Bersama",
+      "tahun": "2021",
+      "id": "20210519"
+    },
+    {
+      "date": "26 Mei 2021",
+      "ket": "Hari Raya Waisak",
+      "tahun": "2021",
+      "id": "20210526"
+    },
+    {
+      "date": "1 Juni 2021",
+      "ket": "Hari Lahir Pancasila",
+      "tahun": "2021",
+      "id": "20210601"
+    },
+    {
+      "date": "20 Juli 2021",
+      "ket": "Idul Adha",
+      "tahun": "2021",
+      "id": "20210720"
+    },
+    {
+      "date": "11 Agustus 2021",
+      "ket": "Tahun Baru Hijriyah",
+      "tahun": "2021",
+      "id": "20210811"
+    },
+    {
+      "date": "17 Agustus 2021",
+      "ket": "Hari Kemerdekaan",
+      "tahun": "2021",
+      "id": "20210817"
+    },
+    {
+      "date": "20 Oktober 2021",
+      "ket": "Maulid Nabi",
+      "tahun": "2021",
+      "id": "20211020"
+    },
+    {
+      "date": "25 Desember 2021",
+      "ket": "Hari Natal",
+      "tahun": "2021",
+      "id": "20211225"
+    },
+    {
+      "date": "1 Januari 2021",
+      "ket": "Hari Tahun Baru",
+      "tahun": "2021",
+      "id": "20210101"
+    },
+    {
+      "date": "12 Februari 2021",
+      "ket": "Tahun Baru Imlek",
+      "tahun": "2021",
+      "id": "20210212"
+    },
+    {
+      "date": "11 Maret 2021",
+      "ket": "Isra Mikraj Nabi Muhammad",
+      "tahun": "2021",
+      "id": "20210311"
+    },
+    {
+      "date": "12 Maret 2021",
+      "ket": "Cuti Bersama",
+      "tahun": "2021",
+      "id": "20210312"
+    },
+    {
+      "date": "14 Maret 2021",
+      "ket": "Hari Suci Nyepi (Tahun Baru Saka)",
+      "tahun": "2021",
+      "id": "20210314"
+    },
+    {
+      "date": "2 April 2021",
+      "ket": "Wafat Isa Almasih",
+      "tahun": "2021",
+      "id": "20210402"
+    },
+    {
+      "date": "4 April 2021",
+      "ket": "Hari Paskah",
+      "tahun": "2021",
+      "id": "20210404"
+    },
+    {
+      "date": "21 April 2021",
+      "ket": "Hari Kartini",
+      "tahun": "2021",
+      "id": "20210421"
+    },
+    {
+      "date": "1 Mei 2021",
+      "ket": "Hari Buruh Internasional / Pekerja",
+      "tahun": "2021",
+      "id": "20210501"
+    },
+    {
+      "date": "12 Mei 2021",
+      "ket": "Cuti Bersama Idul Fitri",
+      "tahun": "2021",
+      "id": "20210512"
+    },
+    {
+      "date": "13 Mei 2021",
+      "ket": "Hari Idul Fitri",
+      "tahun": "2021",
+      "id": "20210513"
+    },
+    {
+      "date": "14 Mei 2021",
+      "ket": "Hari Idul Fitri",
+      "tahun": "2021",
+      "id": "20210514"
+    },
+    {
+      "date": "17 Mei 2021",
+      "ket": "Cuti Bersama Idul Fitri",
+      "tahun": "2021",
+      "id": "20210517"
+    },
+    {
+      "date": "18 Mei 2021",
+      "ket": "Cuti Bersama Idul Fitri",
+      "tahun": "2021",
+      "id": "20210518"
+    },
+    {
+      "date": "19 Mei 2021",
+      "ket": "Cuti Bersama Idul Fitri",
+      "tahun": "2021",
+      "id": "20210519"
+    },
+    {
+      "date": "26 Mei 2021",
+      "ket": "Hari Raya Waisak",
+      "tahun": "2021",
+      "id": "20210526"
+    },
+    {
+      "date": "1 Juni 2021",
+      "ket": "Hari Lahir Pancasila",
+      "tahun": "2021",
+      "id": "20210601"
+    },
+    {
+      "date": "20 Juli 2021",
+      "ket": "Idul Adha (Lebaran Haji)",
+      "tahun": "2021",
+      "id": "20210720"
+    },
+    {
+      "date": "10 Agustus 2021",
+      "ket": "Satu Muharam / Tahun Baru Hijriah",
+      "tahun": "2021",
+      "id": "20210810"
+    },
+    {
+      "date": "11 Agustus 2021",
+      "ket": "Satu Muharam / Tahun Baru Hijriah",
+      "tahun": "2021",
+      "id": "20210811"
+    },
+    {
+      "date": "17 Agustus 2021",
+      "ket": "Hari Proklamasi Kemerdekaan R.I.",
+      "tahun": "2021",
+      "id": "20210817"
+    },
+    {
+      "date": "2 Oktober 2021",
+      "ket": "Hari Batik",
+      "tahun": "2021",
+      "id": "20211002"
+    },
+    {
+      "date": "19 Oktober 2021",
+      "ket": "Maulid Nabi Muhammad",
+      "tahun": "2021",
+      "id": "20211019"
+    },
+    {
+      "date": "20 Oktober 2021",
+      "ket": "Maulid Nabi Muhammad",
+      "tahun": "2021",
+      "id": "20211020"
+    },
+    {
+      "date": "4 November 2021",
+      "ket": "Diwali / Deepavali",
+      "tahun": "2021",
+      "id": "20211104"
+    },
+    {
+      "date": "12 November 2021",
+      "ket": "Hari Ayah",
+      "tahun": "2021",
+      "id": "20211112"
+    },
+    {
+      "date": "25 November 2021",
+      "ket": "Hari Guru",
+      "tahun": "2021",
+      "id": "20211125"
+    },
+    {
+      "date": "22 Desember 2021",
+      "ket": "Hari Ibu",
+      "tahun": "2021",
+      "id": "20211222"
+    },
+    {
+      "date": "24 Desember 2021",
+      "ket": "Malam Natal",
+      "tahun": "2021",
+      "id": "20211224"
+    },
+    {
+      "date": "25 Desember 2021",
+      "ket": "Hari Raya Natal",
+      "tahun": "2021",
+      "id": "20211225"
+    },
+    {
+      "date": "27 Desember 2021",
+      "ket": "Cuti Bersama Natal (Hari Tinju)",
+      "tahun": "2021",
+      "id": "20211227"
+    },
+    {
+      "date": "31 Desember 2021",
+      "ket": "Malam Tahun Baru",
+      "tahun": "2021",
+      "id": "20211231"
+    },
+    {
+      "date": "1 Januari 2022",
+      "ket": "Hari Tahun Baru",
+      "tahun": "2022",
+      "id": "20220101"
+    },
+    {
+      "date": "1 Februari 2022",
+      "ket": "Tahun Baru Imlek",
+      "tahun": "2022",
+      "id": "20220201"
+    },
+    {
+      "date": "28 Februari 2022",
+      "ket": "Isra Mikraj Nabi Muhammad",
+      "tahun": "2022",
+      "id": "20220228"
+    },
+    {
+      "date": "3 Maret 2022",
+      "ket": "Hari Suci Nyepi (Tahun Baru Saka)",
+      "tahun": "2022",
+      "id": "20220303"
+    },
+    {
+      "date": "15 April 2022",
+      "ket": "Wafat Isa Almasih",
+      "tahun": "2022",
+      "id": "20220415"
+    },
+    {
+      "date": "17 April 2022",
+      "ket": "Hari Paskah",
+      "tahun": "2022",
+      "id": "20220417"
+    },
+    {
+      "date": "21 April 2022",
+      "ket": "Hari Kartini",
+      "tahun": "2022",
+      "id": "20220421"
+    },
+    {
+      "date": "1 Mei 2022",
+      "ket": "Hari Buruh Internasional / Pekerja",
+      "tahun": "2022",
+      "id": "20220501"
+    },
+    {
+      "date": "2 Mei 2022",
+      "ket": "Hari Idul Fitri",
+      "tahun": "2022",
+      "id": "20220502"
+    },
+    {
+      "date": "3 Mei 2022",
+      "ket": "Hari Idul Fitri",
+      "tahun": "2022",
+      "id": "20220503"
+    },
+    {
+      "date": "16 Mei 2022",
+      "ket": "Hari Raya Waisak",
+      "tahun": "2022",
+      "id": "20220516"
+    },
+    {
+      "date": "26 Mei 2022",
+      "ket": "Kenaikan Isa Al Masih",
+      "tahun": "2022",
+      "id": "20220526"
+    },
+    {
+      "date": "1 Juni 2022",
+      "ket": "Hari Lahir Pancasila",
+      "tahun": "2022",
+      "id": "20220601"
+    },
+    {
+      "date": "9 Juli 2022",
+      "ket": "Idul Adha (Lebaran Haji)",
+      "tahun": "2022",
+      "id": "20220709"
+    },
+    {
+      "date": "30 Juli 2022",
+      "ket": "Satu Muharam / Tahun Baru Hijriah",
+      "tahun": "2022",
+      "id": "20220730"
+    },
+    {
+      "date": "17 Agustus 2022",
+      "ket": "Hari Proklamasi Kemerdekaan R.I.",
+      "tahun": "2022",
+      "id": "20220817"
+    },
+    {
+      "date": "2 Oktober 2022",
+      "ket": "Hari Batik",
+      "tahun": "2022",
+      "id": "20221002"
+    },
+    {
+      "date": "8 Oktober 2022",
+      "ket": "Maulid Nabi Muhammad",
+      "tahun": "2022",
+      "id": "20221008"
+    },
+    {
+      "date": "24 Oktober 2022",
+      "ket": "Diwali / Deepavali",
+      "tahun": "2022",
+      "id": "20221024"
+    },
+    {
+      "date": "12 November 2022",
+      "ket": "Hari Ayah",
+      "tahun": "2022",
+      "id": "20221112"
+    },
+    {
+      "date": "25 November 2022",
+      "ket": "Hari Guru",
+      "tahun": "2022",
+      "id": "20221125"
+    },
+    {
+      "date": "22 Desember 2022",
+      "ket": "Hari Ibu",
+      "tahun": "2022",
+      "id": "20221222"
+    },
+    {
+      "date": "24 Desember 2022",
+      "ket": "Malam Natal",
+      "tahun": "2022",
+      "id": "20221224"
+    },
+    {
+      "date": "25 Desember 2022",
+      "ket": "Hari Raya Natal",
+      "tahun": "2022",
+      "id": "20221225"
+    },
+    {
+      "date": "31 Desember 2022",
+      "ket": "Malam Tahun Baru",
+      "tahun": "2022",
+      "id": "20221231"
+    },
+    {
+      "date": "21 April 2023",
+      "ket": "Hari Kartini",
+      "tahun": "2023",
+      "id": "20230421"
+    },
+    {
+      "date": "2 Oktober 2023",
+      "ket": "Hari Batik",
+      "tahun": "2023",
+      "id": "20231002"
+    },
+    {
+      "date": "12 November 2023",
+      "ket": "Hari Ayah",
+      "tahun": "2023",
+      "id": "20231112"
+    },
+    {
+      "date": "25 November 2023",
+      "ket": "Hari Guru",
+      "tahun": "2023",
+      "id": "20231125"
+    },
+    {
+      "date": "22 Desember 2023",
+      "ket": "Hari Ibu",
+      "tahun": "2023",
+      "id": "20231222"
+    }
+  ]
+}
