@@ -1,5 +1,5 @@
 {
-  "name": "npush",
+  "name": "ptick",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mlengse/npush.git"
+    "url": "git+https://github.com/mlengse/pctick.git"
   },
   "author": "mlengse",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mlengse/npush/issues"
+    "url": "https://github.com/mlengse/pctick/issues"
   },
-  "homepage": "https://github.com/mlengse/npush#readme",
+  "homepage": "https://github.com/mlengse/pctick#readme",
   "dependencies": {
     "arangojs": "^7.3.0",
     "axios": "^0.21.1",
