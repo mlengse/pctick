@@ -7,135 +7,63 @@ const waitOpt = {
 exports.waitOpt = waitOpt      
 exports._waitNav = async ({ that }) => await that.page.waitForNavigation(waitOpt)
 
-exports._daftarDelete = async ({ that, pendaftar }) => {
-  return await that.page.evaluate( data => {
-    $.ajax({
-      url: base_url + "/EntriDaftarDokkel/DaftarDelete",
-      data: JSON.stringify(data),
-      contentType: "application/json",
-      type: "POST",
-      success: function (data) {
-        if (data.metaData.code === 200) {
-          // riwayatPendaftaran.ajax.reload();
-          showMessage(200, 'Data berhasil di hapus');
-        }
-        else errorHandler(data);
-      },
-      error: function (err) {
-        errorHandler(err.responseJSON);
-      }
-    });
-  }, pendaftar)
-}
+let eti = ''
 
-exports._getPendaftarByPpkTgl = async ({ that, tgldaftar }) =>{
-  that.spinner.start(`get pendaftar by ppk tgl: ${tgldaftar}`)
+exports._checkNIK = async ({ that, kontak }) => {
 
-  let faskes = that.config.PCAREUSR
-  await that.page.evaluate(async (tgldaftar, faskes) => {
+  await that.page.evaluate(() => {
+    let radio = document.querySelector('#rbJenisIdentitas_NIK');
+    radio.click();
+  });
 
-    $('#bulanRiwayat').val(tgldaftar);
+  await that.page.evaluate( nik => document.getElementById("txtnokartu").value = nik, kontak.nik)
 
-    if (riwayatPendaftaran != null) {
-      riwayatPendaftaran.ajax.reload();
-      return riwayatPendaftaran.ajax.json();
-    }
+  // await that.page.type('#txtnokartu', kontak.nik)
 
-    riwayatPendaftaran = $('#example').DataTable({
-      "processing": true,
-      "serverSide": true,
-      "ordering": false,
-      "searching": false,
-      "lengthChange": false,
-      "pageLength": 1000,
-      "select": {
-        style: 'single'
-      },
-      "scrollX": true,
-      ajax: {
-        url: base_url + '/EntriDaftarDokkel/getPendaftarByPpkTgl',
-        type: "POST",
-        data: function (param) {
-          param.tgldaftar = $('#bulanRiwayat').val();
-          param.refAsalKunjungan = $('#kunjSakitRiwayat').val();
-          param.kdppk = faskes;
-        },
-        dataFilter: dataTablesResponse,
-        error: function (xhr) {
-          errorHandler(JSON.parse(xhr.responseText));
-        }
-      },
-      columnDefs: [
-        {
-          'targets': 8,
-          'render': function (a, b, data, meta) {
-            if (data.status === 0) {
-              return "<div class='btn-group'> " 
-              + "<button type='button' class='btn btnDelete btn btn-danger' onclick=\"chooseDeleteDaftarRiwayat('" + meta.row + "')\"><i class='fa fa-trash'></i></button>" 
-              + "</div>";
-            }
-            return "";
-          }
-        },
-        {
-          'targets': 2,
-          'render': function (a, b, data, meta) {
-            if (data.pesertaProlanis.isProlanis && data.pesertaProlanis.isPesertaPRB) {
-              return "<label style='color:red' title='Peserta Prolanis & PRB'>" + data.peserta.nama + "</label>";
-            } else if (data.pesertaProlanis.isProlanis) {
-              return "<label style='color:#b8ca35' title='Peserta Prolanis Tanpa PRB'>" + data.peserta.nama + "</label>";
-            } else if (data.pesertaProlanis.idPrbDM > 0 || data.pesertaProlanis.idPrbHT > 0) {
-              return "<label style='color:green' title='Peserta PRB'>" + data.peserta.nama + "</label>";
-            }
-            return "<label style='font-weight:normal;'>" + data.peserta.nama + "</label>";
-          }
-        }
-      ],
-      columns: [
-        {
-          data: function (data) {
-            return data.aliasAntrian + data.noUrut;
-          }
-        },
-        { data: 'peserta.noKartu' },
-        {
-          data: function (data) {
-            return data;
-          }
-        },
-        { data: 'peserta.sex' },
-        {
-          data: function (data) {
-            return calcAge(strToDate(data.peserta.tglLahir));
-          }
-        },
-        { data: 'poli.nmPoli' },
-        {
-          data: function (data) {
-            return getSumberPendaftaran(data.fromWs);
-          }
-        },
-        {
-          data: function (data) {
-            return getStatusPendaftaran(data.status);
-          }
-        }
-      ]
-    });
+  await that.page.evaluate(() => {
+    let cari = document.querySelector('#btnCariPeserta');
+    cari.click();
+  })
 
-    return riwayatPendaftaran.ajax.json()
+  let etiket = await that.page.evaluate(() => {
+    let etiket = document.querySelector('#lblnokartu_noregister')
+    return etiket.value
+  })
 
-  }, tgldaftar, faskes)
+  let t = 0
 
-  await that.page.waitForTimeout(5000)
-
-  let pendaftar = await that.page.evaluate(() => riwayatPendaftaran.ajax.json())
-
-  if(pendaftar && pendaftar.response && pendaftar.response.data && pendaftar.response.data.length) {
-    that.spinner.succeed(`daftar tgl: ${tgldaftar} jml: ${pendaftar.response.data.length}`)
-    return pendaftar.response.data
+  while((!etiket || etiket === eti) && t < 2000){
+    etiket = await that.page.evaluate(() => {
+      let etiket = document.getElementById('lblnokartu_noregister').textContent
+      return etiket
+    })
+    t++
+  
   }
-  return []
+
+  if(etiket){
+    eti = etiket
+
+    let ok = await that.page.$('body > div.bootbox.modal.fade.bootbox-alert.in > div > div > div.modal-footer > button')
+    while(!ok){
+      ok = await that.page.$('body > div.bootbox.modal.fade.bootbox-alert.in > div > div > div.modal-footer > button')
+    }
+  
+    await ok.click()
+  
+  }
+
+
+
+  // if(modal){
+  //   console.log('ada')
+  //   await modal.click()
+  // }
+
+  return etiket
+
+  // console.log(kontak.nik, etiket)
+
 }
 
 exports._loginPcare = async ({ that }) => {
@@ -144,9 +72,9 @@ exports._loginPcare = async ({ that }) => {
   if(needLogin) {
     that.spinner.start('login pcare')
     await that.page.waitForSelector('input.form-control[placeholder="Username"]')
-    await that.page.type('input.form-control[placeholder="Username"]', that.config.PCAREUSR)
+    await that.page.type('input.form-control[placeholder="Username"]', that.config.PCARE_USR)
     await that.page.waitForSelector('input.form-control[placeholder="Password"]')
-    await that.page.type('input.form-control[placeholder="Password"]', that.config.PCAREPWD, { delay: 100 })
+    await that.page.type('input.form-control[placeholder="Password"]', that.config.PCARE_PWD, { delay: 100 })
   
     let inpVal = await that.page.evaluate(() => document.getElementById('CaptchaInputText').value)
     while(!inpVal || inpVal.length < 5 ){
@@ -155,7 +83,7 @@ exports._loginPcare = async ({ that }) => {
   
     const [response] = await Promise.all([
       that.page.waitForNavigation(waitOpt),
-      that.page.type('#CaptchaInputText', String.fromCharCode(13)),
+      // that.page.type('#CaptchaInputText', String.fromCharCode(13)),
       that.page.click('#btnLogin', {delay: 500}),
     ]);
     

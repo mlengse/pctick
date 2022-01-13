@@ -65,3 +65,9 @@ exports.tglDaftar = () => {
   }
  } 
 } 
+
+exports._wait = async ({ that, time }) => {
+  return await new Promise(resolve => {
+    setTimeout(() => { resolve(); }, time);
+  })
+}

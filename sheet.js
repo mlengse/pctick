@@ -9,62 +9,22 @@ const app = new Core(config)
 module.exports = async (isPM2) => {
 
   try{
-    await app.init()
+    await app.initBrowser()
 
-    let kontaks = await app.listKontak()
-    let tanggals = [ ...new Set(kontaks.map(({ Tanggal }) => Tanggal))]
-    let listDaft = []
-    for( tanggal of tanggals){
-      let daft = (await app.getPendaftaranProvider({ 
-        tanggal: app.tglPcareFromKontak(tanggal)
-      }))
+    await app.runScript()
 
-      listDaft = [ ...listDaft, ...daft.map(({ peserta: {noKartu}}) => noKartu)]
-    }
-    // console.log(listDaft)
-    // let listDaft = (await app.getPendaftaranProvider()).map(({ peserta: {noKartu}}) => noKartu)
-    // listDaft = [ ...listDaft, ...(await app.getPendaftaranProvider({ tanggal: app.tglKemarin()})).map(({ peserta: {noKartu}}) => noKartu)]
+    await app.page.goto(`${app.config.PCARE_URL}/EntriPenerimaVaksinKLB/Simplifikasi`, app.waitOpt)
 
-    for (kontak of kontaks){
-      kontak = await app.upsertKontakJKN({ doc: kontak })
-      if( !listDaft.filter( e => e === kontak.No_JKN ).length ){
-        let peserta 
-        if(kontak.aktif || kontak.ketAktif){
-          peserta = kontak
-        } else {
-          let pstJKN = await app.getPesertaByNoka({
-            noka: kontak.No_JKN
-          })
-          kontak = Object.assign({}, kontak, pstJKN)
-          peserta = await app.upsertKontakJKN({ doc: kontak })
-        }
+    for ([id, kontak] of (await app.listKontak()).entries()){
+      if(!kontak.etiket){
+        kontak.id = id
+        kontak.etiket = await app.checkNIK({ kontak })
 
-        if(peserta && !peserta.daftResponse && peserta.aktif /* &&  peserta.kdProviderPst.kdProvider.trim() === app.config.PROVIDER*/ ){
+        await app.insertTiket({ kontak })
+        // console.log(kontak)
 
-          // check if kontak not registered yet
-          let historyCheck = (await app.getRiwayatKunjungan({ peserta })).filter( ({ tglKunjungan }) => app.checkDate( tglKunjungan, kontak.Tanggal))
+        await app.wait({time: 5000})
 
-          if(!historyCheck.length){
-  
-            let message = await app.sendToWS({kontak: peserta})
-
-            message = await app.upsertKontakJKN({ doc: message })
-
-            if(!message.from && message.daftResponse && JSON.stringify(message.daftResponse).includes('CREATED')) {
-
-              let textwa = await app.sendToWA({
-                message
-              })
-
-              message = await app.upsertKontakJKN({ doc: textwa })
-
-            }
-  
-            // console.log(message)
-          }
-    
-        }
-  
       }
 
     }

@@ -89,14 +89,6 @@ exports._getVisitsHistoryByUmurAndSexID = async ({that, umur, sex_id}) => {
   return newVisitsHistory
 }
 
-exports._getDokters = async ({ that }) => await that.connect({
-  query: `SELECT * FROM bpjs_workers LIMIT 1`
-})
-
-exports._getSettings = async ({ that }) => await that.connect({
-  query: `SELECT * FROM healthcenters LIMIT 1`
-})
-
 exports._getPatient = async ({ that, message}) => {
 
   if(message && message.pendaftaran && message.pendaftaran.det && message.pendaftaran.det.noKartu) {

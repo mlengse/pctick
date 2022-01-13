@@ -1,7 +1,6 @@
 const start = require('./start')
-const main = require('./main.js')
+const main = require('./sheet.js')
 const { isPuppeteer } = require('./npmls')
-
 module.exports = async (isPM2) => {
   let puppet = await isPuppeteer()
   // console.log(puppeteer)
