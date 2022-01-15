@@ -146,10 +146,8 @@ exports._insertTiket =  async ({ that, kontak }) => {
 
   }, (err, res) => {
 
-    if(err){
-      console.log(err)
-    }
-    console.log(kontak.nik, kontak.etiket, res.statusText)
+    err && console.log(err)
+    res && that.spinner.start(`${kontak.nik}, ${kontak.etiket}, saved ${res.statusText}`)
     resolve(Object.assign({}, kontak, res))
     // console.log(res)
     // that.spinner.start('start listing')

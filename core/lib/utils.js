@@ -19,23 +19,16 @@ exports.getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
-exports.getSystole = () => {
-  return this.getRandomInt( 110, 129)
+exports._wait = async ({ that, time }) => {
+  return await new Promise(resolve => {
+    setTimeout(() => { resolve(); }, time);
+  })
 }
 
-exports.getDiastole = () => {
-  return this.getRandomInt( 70, 79)
+exports.verifynik = nik => {
+  nik = nik.replace(/\D/g,'')
+  if(nik.length === 16 && nik.slice(-4) !== '0000'){
+    return nik
+  }
+  return false
 }
-
-exports.getGDP = () => {
-  return this.getRandomInt( 101, 130)
-}
-
-exports.getRR = () => {
-  return this.getRandomInt( 18, 24)
-}
-
-exports.getHR = () => {
-  return this.getRandomInt( 90, 98)
-}
-

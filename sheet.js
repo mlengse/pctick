@@ -18,13 +18,15 @@ module.exports = async (isPM2) => {
     for ([id, kontak] of (await app.listKontak()).entries()){
       if(!kontak.etiket){
         kontak.id = id
-        kontak.etiket = await app.checkNIK({ kontak })
-
-        await app.insertTiket({ kontak })
-        // console.log(kontak)
-
-        await app.wait({time: 5000})
-
+        let ver = app.verifynik(kontak.nik)
+        if(ver){
+          kontak.nik = ver
+          kontak.etiket = await app.checkNIK({ kontak })
+          await app.wait({time: 5000})
+        } else {
+          kontak.etiket = 'NIK salah'
+        }
+        kontak.etiket && await app.insertTiket({ kontak })
       }
 
     }

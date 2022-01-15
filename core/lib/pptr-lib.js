@@ -59,6 +59,7 @@ exports._checkNIK = async ({ that, kontak }) => {
   //   console.log('ada')
   //   await modal.click()
   // }
+  etiket && that.spinner.start(`${kontak.nik}, ${etiket}`)
 
   return etiket
 
@@ -75,18 +76,30 @@ exports._loginPcare = async ({ that }) => {
     await that.page.type('input.form-control[placeholder="Username"]', that.config.PCARE_USR)
     await that.page.waitForSelector('input.form-control[placeholder="Password"]')
     await that.page.type('input.form-control[placeholder="Password"]', that.config.PCARE_PWD, { delay: 100 })
+    // await that.page.waitForSelector('#CaptchaInputText')
+    // await that.page.focus('#CaptchaInputText')
+    // await that.page.click('#CaptchaInputText')
+    await that.page.type('#CaptchaInputText', '')
   
     let inpVal = await that.page.evaluate(() => document.getElementById('CaptchaInputText').value)
-    while(!inpVal || inpVal.length < 5 ){
+    while(!inpVal || inpVal.length !== 5 ){
       inpVal = await that.page.evaluate(() => document.getElementById('CaptchaInputText').value)
+      that.spinner.start(`input ${inpVal}`)
     }
+
+    that.spinner.start(`input ${inpVal}`)
+
+    await that.page.waitForTimeout(1000)
   
-    const [response] = await Promise.all([
-      that.page.waitForNavigation(waitOpt),
-      // that.page.type('#CaptchaInputText', String.fromCharCode(13)),
-      that.page.click('#btnLogin', {delay: 500}),
-    ]);
+    // await that.page.type('#CaptchaInputText', String.fromCharCode(13))
     
+    await that.page.evaluate(() =>{
+      document.getElementById('btnLogin').click()
+    })
+    
+      
+    await that.page.waitForNavigation(waitOpt)
+      
     that.spinner.succeed('logged in')
   
   }

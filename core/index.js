@@ -19,7 +19,6 @@ module.exports = class Core {
   }
 
   async close(isPM2){
-    this.poolClose && await this.poolClose()
     if(this.browser){
       !isPM2 && await this.browser.close()
       isPM2 && this.browser.isConnected() && await this.browser.disconnect()
