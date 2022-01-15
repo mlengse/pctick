@@ -19,12 +19,12 @@ module.exports = async (isPM2) => {
       if(!kontak.etiket){
         kontak.id = id
         let ver = app.verifynik(kontak.nik)
-        if(ver){
-          kontak.nik = ver
+        if(!ver.salah){
+          kontak.nik = ver.nik
           kontak.etiket = await app.checkNIK({ kontak })
           await app.wait({time: 5000})
         } else {
-          kontak.etiket = 'NIK salah'
+          kontak.etiket = ver.salah
         }
         kontak.etiket && await app.insertTiket({ kontak })
       }

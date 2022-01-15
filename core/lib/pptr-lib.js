@@ -59,7 +59,7 @@ exports._checkNIK = async ({ that, kontak }) => {
   //   console.log('ada')
   //   await modal.click()
   // }
-  etiket && that.spinner.start(`${kontak.nik}, ${etiket}`)
+  that.spinner.start(`${kontak.id+2}: ${kontak.nik}${etiket? `, etiket: ${etiket}`: ''}`)
 
   return etiket
 

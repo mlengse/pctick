@@ -27,8 +27,12 @@ exports._wait = async ({ that, time }) => {
 
 exports.verifynik = nik => {
   nik = nik.replace(/\D/g,'')
-  if(nik.length === 16 && nik.slice(-4) !== '0000'){
-    return nik
+  let salah
+  if(nik.length !== 16){
+    salah = 'NIK tidak 16 digit'
   }
-  return false
+  if( nik.slice(-4) === '0000' ){
+    salah = 'NIK akhiran 0000'
+  }
+  return {nik, salah }
 }
