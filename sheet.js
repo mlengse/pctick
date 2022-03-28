@@ -13,16 +13,18 @@ module.exports = async (isPM2) => {
 
     await app.runScript()
 
+    // await app.checkD2()
+
     await app.page.goto(`${app.config.PCARE_URL}/EntriPenerimaVaksinKLB/Simplifikasi`, app.waitOpt)
 
     for ([id, kontak] of (await app.listKontak()).entries()){
-      if(!kontak.etiket){
+      if(!kontak.etiket && kontak.nik){
         kontak.id = id
         let ver = app.verifynik(kontak.nik)
         if(!ver.salah){
           kontak.nik = ver.nik
           kontak.etiket = await app.checkNIK({ kontak })
-          await app.wait({time: 5000})
+          // await app.wait({time: 5000})
         } else {
           kontak.etiket = ver.salah
         }

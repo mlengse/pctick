@@ -25,45 +25,84 @@ exports._checkNIK = async ({ that, kontak }) => {
     cari.click();
   })
 
-  let etiket = await that.page.evaluate(() => {
-    let etiket = document.querySelector('#lblnokartu_noregister')
-    return etiket.value
-  })
-
+  let etiket
+  let pesan 
   let t = 0
 
-  while((!etiket || etiket === eti) && t < 2000){
+  while((!etiket || etiket === eti || !pesan) && t < 2000){
     etiket = await that.page.evaluate(() => {
       let etiket = document.getElementById('lblnokartu_noregister').textContent
       return etiket
     })
+    pesan = await that.page.evaluate(() => {
+      let pesans = [...document.querySelectorAll('body > div[data-notify="container"][role="alert"]')]
+      pesans = pesans.map( pesan => pesan.textContent).filter( e => e.length)
+      return pesans[pesans.length-1]
+    })
+
     t++
-  
+
+    that.spinner.start(`${kontak.id+2}: ${kontak.nik}${etiket? `, etiket: ${etiket}`: ''}${pesan?`, pesan: ${pesan}`: ''}`)
   }
 
   if(etiket){
     eti = etiket
-
+    
     let ok = await that.page.$('body > div.bootbox.modal.fade.bootbox-alert.in > div > div > div.modal-footer > button')
-    while(!ok){
+    t = 0
+
+    while(!ok && t < 2000){
       ok = await that.page.$('body > div.bootbox.modal.fade.bootbox-alert.in > div > div > div.modal-footer > button')
+      t++
     }
-  
-    await ok.click()
-  
+
+    ok && await ok.click() 
+    
+    ok && await that.page.evaluate(()=>{
+      let ok = document.querySelector('body > div.bootbox.modal.fade.bootbox-alert.in > div > div > div.modal-footer > button')
+
+      ok.click()
+    })
+  } 
+
+  if(!etiket && pesan){
+    if(pesan.includes('sudah dipergunakan')){
+      etiket = 'NIK etiket sudah digunakan'
+    } else if( pesan.includes('PERHATIAN')) {
+      await that.wait({time: 1550})
+      return await that.checkNIK({kontak})
+    } else if ( !pesan.includes('KPCPEN')){
+      etiket = 'NIK '+pesan
+    }
   }
 
+  if(!etiket) {
+    let tidak = await that.page.$('body > div.bootbox > div.modal-dialog > div.modal-content > div.modal-footer > button.btn.btn-danger.bootbox-cancel')
 
+    if(tidak){
+      let psn = await that.page.evaluate(() => {
+        return document.querySelector('body > div.bootbox > div.modal-dialog > div.modal-content > div.modal-body').textContent
+      })
 
-  // if(modal){
-  //   console.log('ada')
-  //   await modal.click()
-  // }
+      if(psn && psn.includes('DATA TIDAK DITEMUKAN') && psn.includes(kontak.nik)){
+        etiket = 'NIK tidak ditemukan'
+      }
+    }
+
+    tidak && await tidak.click() 
+    
+    tidak && await that.page.evaluate(()=>{
+      let ok = document.querySelector('body > div.bootbox > div.modal-dialog > div.modal-content > div.modal-footer > button.btn.btn-danger.bootbox-cancel')
+      ok.click()
+    })
+
+  }
+  
   that.spinner.start(`${kontak.id+2}: ${kontak.nik}${etiket? `, etiket: ${etiket}`: ''}`)
+          
+  await that.wait({time: 1550})
 
   return etiket
-
-  // console.log(kontak.nik, etiket)
 
 }
 
