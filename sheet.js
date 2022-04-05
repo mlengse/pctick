@@ -27,7 +27,7 @@ module.exports = async (isPM2) => {
           if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
             kontak.no_hp= await app.checkHP()
           }
-          // await app.wait({time: 5000})
+          await app.wait({time: 2000})
         } else {
           kontak.etiket = ver.salah
         }

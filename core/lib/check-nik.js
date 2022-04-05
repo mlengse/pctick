@@ -20,7 +20,7 @@ exports._checkNIK = async ({ that, kontak }) => {
   let pesan 
   let t = 0
 
-  while((!etiket || etiket === eti || !pesan) && t < 2000){
+  while((!etiket || etiket === eti || !pesan) && t < 1000){
     etiket = await that.page.evaluate(() => {
       let etiket = document.getElementById('lblnokartu_noregister').textContent
       return etiket
@@ -43,7 +43,7 @@ exports._checkNIK = async ({ that, kontak }) => {
     let ok = await that.page.$('body > div.bootbox.modal.fade.bootbox-alert.in > div > div > div.modal-footer > button')
     t = 0
 
-    while(!ok && t < 2000){
+    while(!ok && t < 1000){
       ok = await that.page.$('body > div.bootbox.modal.fade.bootbox-alert.in > div > div > div.modal-footer > button')
       t++
     }
