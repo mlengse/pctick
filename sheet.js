@@ -24,11 +24,15 @@ module.exports = async (isPM2) => {
         if(!ver.salah){
           kontak.nik = ver.nik
           kontak.etiket = await app.checkNIK({ kontak })
+          if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
+            kontak.no_hp= await app.checkHP()
+          }
           // await app.wait({time: 5000})
         } else {
           kontak.etiket = ver.salah
         }
         kontak.etiket && await app.insertTiket({ kontak })
+        kontak.no_hp && await app.insertHP({ kontak })
       }
 
     }

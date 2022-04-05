@@ -102,13 +102,13 @@ exports._listKontak =  async ({ that }) => {
     const rows = res.data.values;
     if (rows.length) {
       // Print columns A and E, which correspond to indices 0 and 4.
-      const headers = rows[0]
+      const headers = rows[0].map(e => e.toLowerCase().split(' ').join('_'))
       rows.map((row, id) => {
         let objRow = {}
         if(id){
           row.map((col, id) => {
-            if(col && col.length){
-              objRow[headers[id].split(' ').join('_')] = col
+            if(col && col.length && headers[id]){
+              objRow[headers[id]] = col
             }
           })
           rows[id] = objRow
@@ -147,34 +147,33 @@ exports._insertTiket =  async ({ that, kontak }) => {
   }, (err, res) => {
 
     err && console.log(err)
-    res && that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.etiket}, saved ${res.statusText}`)
+    res && that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.etiket}, saved ${res.statusText}`)
     resolve(Object.assign({}, kontak, res))
-    // console.log(res)
-    // that.spinner.start('start listing')
-    // if (err) reject('The API returned an error: ' + err);
-    // const rows = res.data.values;
-    // if (rows.length) {
-    //   // Print columns A and E, which correspond to indices 0 and 4.
-    //   const headers = rows[0]
-    //   rows.map((row, id) => {
-    //     let objRow = {}
-    //     if(id){
-    //       row.map((col, id) => {
-    //         if(col && col.length){
-    //           objRow[headers[id].split(' ').join('_')] = col
-    //         }
-    //       })
-    //       rows[id] = objRow
-    //     }
-    //     // console.log(`${row[0]}, ${row[4]}`);
-    //   });
-    //   rows.shift()
-    //   that.spinner.succeed(`data found: ${rows.length}`)
-    //   resolve(rows)
+  }));
+}
 
-    // } else {
-    //   that.spinner.succeed('no data found')
-    //   resolve([]);
-    // }
+exports._insertHP =  async ({ that, kontak }) => {
+
+  const auth = await authorize()
+
+  const sheets = google.sheets({version: 'v4', auth});
+  return await new Promise ( (resolve, reject) => sheets.spreadsheets.values.update({
+    spreadsheetId: that.config.SHEET_ID,
+    range: `Sheet1!C${kontak.id+2}`,
+    valueInputOption:'USER_ENTERED',
+    requestBody: {
+      "values": [
+        [
+          `${kontak.no_hp}`
+        ]
+      ],
+      "range": `Sheet1!C${kontak.id+2}`
+    }
+
+  }, (err, res) => {
+
+    err && console.log(err)
+    res && that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.no_hp}, saved ${res.statusText}`)
+    resolve(Object.assign({}, kontak, res))
   }));
 }
