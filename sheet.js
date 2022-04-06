@@ -3,6 +3,7 @@ if(process.env.NODE_ENV !== 'production'){
 }
 const Core = require('./core')
 const config = require('./config')
+const { promise } = require('ora')
 
 const app = new Core(config)
 
@@ -27,12 +28,20 @@ module.exports = async (isPM2) => {
           if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
             kontak.no_hp= await app.checkHP()
           }
-          await app.wait({time: 2000})
         } else {
           kontak.etiket = ver.salah
         }
-        kontak.etiket && await app.insertTiket({ kontak })
-        kontak.no_hp && await app.insertHP({ kontak })
+        await Promise.all([
+          new Promise( async resolve => {
+            kontak.etiket && await app.insertTiket({ kontak })
+            resolve()
+          }),
+          new Promise( async resolve => {
+            kontak.no_hp && await app.insertHP({ kontak })
+            resolve()
+          }),
+          app.wait({time: 2000})
+        ])
       }
 
     }
