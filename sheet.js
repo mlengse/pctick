@@ -40,7 +40,7 @@ module.exports = async (isPM2) => {
             kontak.no_hp && await app.insertHP({ kontak })
             resolve()
           }),
-          app.wait({time: 2000})
+          app.wait({time: app.getRandomInt(2000, 4000)})
         ])
       }
 
