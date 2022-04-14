@@ -3,46 +3,55 @@ if(process.env.NODE_ENV !== 'production'){
 }
 const Core = require('./core')
 const config = require('./config')
-const { promise } = require('ora')
 
 const app = new Core(config)
 
 module.exports = async (isPM2) => {
 
   try{
-    await app.initBrowser()
 
-    await app.runScript()
+    let [listKontak, listSudah ] = await Promise.all([
+      app.listKontak(),
+      app.listSudah(),
+      app.initBrowser()
+    ])
+    // await 
 
-    // await app.checkD2()
 
-    await app.page.goto(`${app.config.PCARE_URL}/EntriPenerimaVaksinKLB/Simplifikasi`, app.waitOpt)
-
-    for ([id, kontak] of (await app.listKontak()).entries()){
-      if(!kontak.etiket && kontak.nik){
-        kontak.id = id
-        let ver = app.verifynik(kontak.nik)
-        if(!ver.salah){
-          kontak.nik = ver.nik
-          kontak.etiket = await app.checkNIK({ kontak })
-          if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
-            kontak.no_hp= await app.checkHP()
+    for ([id, kontak] of listKontak.entries()){
+      kontak.id = id
+      if(!kontak.status){
+        if(!kontak.etiket && kontak.nik){
+          let ver = app.verifynik(kontak.nik)
+          if(!ver.salah){
+            let sudah = listSudah.filter( e => e.nik === kontak.nik)
+            if(sudah.length){
+              // console.log(sudah)
+              kontak.etiket = 'NIK etiket sudah digunakan'
+            } else {
+              kontak.nik = ver.nik
+              kontak.etiket = await app.checkNIK({ kontak })
+              if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
+                kontak.no_hp= await app.checkHP()
+              }
+            }
+          } else {
+            kontak.etiket = ver.salah
           }
-        } else {
-          kontak.etiket = ver.salah
+          await Promise.all([
+            app.insertTiket({ kontak }),
+            app.insertHP({ kontak }),
+            app.wait({time: app.getRandomInt(1700, 3500)})
+          ])
         }
+
         await Promise.all([
-          new Promise( async resolve => {
-            kontak.etiket && await app.insertTiket({ kontak })
-            resolve()
-          }),
-          new Promise( async resolve => {
-            kontak.no_hp && await app.insertHP({ kontak })
-            resolve()
-          }),
-          app.wait({time: app.getRandomInt(2000, 4000)})
+          app.insertStatus({ kontak }),
+          app.wait({time: app.getRandomInt(300, 500)})
         ])
+  
       }
+
 
     }
 

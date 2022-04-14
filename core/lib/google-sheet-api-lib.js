@@ -83,19 +83,149 @@ const getNewToken = async oAuth2Client => {
   })
 }
 
+
+exports.getStatus = etiket => {
+  if(etiket.includes('tidak ditemukan')){
+    if(etiket.includes('pada tanggal')){
+      return 'Tunggu jadwal'
+    }
+    return 'Belum D1'
+  }
+  if(etiket.includes('sudah')){
+    if(etiket.includes('digunakan')){
+      return 'Sudah booster'
+    }
+    if(etiket.includes('entry')){
+      return 'Proses entry'
+    }
+  }
+  if(etiket.length){
+    return 'Belum lengkap'
+  }
+}
+
+exports._insertCell =  async ({ that, spreadsheetId, range, values }) => {
+  const auth = await authorize()
+
+  const sheets = google.sheets({version: 'v4', auth});
+  return await new Promise ( (resolve, reject) => sheets.spreadsheets.values.update({
+    spreadsheetId,
+    range,
+    valueInputOption:'USER_ENTERED',
+    requestBody: {
+      "values": [
+        [
+          `${values}`
+        ]
+      ],
+      "range": `${range}`
+    }
+
+  }, async (err, res) => {
+    if(err && JSON.stringify(err).includes('rate')){
+      let time = that.getRandomInt(150, 700)
+      that.spinner.fail(`kena rate limit, wait for: ${time}`)
+      await that.wait({time})
+      res = await that.insertCell({ spreadsheetId, range, values})
+    }
+    // err && console.log(err)
+    resolve(Object.assign({}, res))
+  }));
+}
+
+exports._insertStatus =  async ({ that, kontak }) => {
+  if(kontak.etiket && !kontak.status) {
+    kontak.status = that.getStatus(kontak.etiket)
+    let res = await that.insertCell({
+      spreadsheetId: that.config.SHEET_ID,
+      range: `Sheet1!B${kontak.id+2}`,
+      values: kontak.status
+
+    })
+    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.status}, saved ${res.statusText}`)
+    return res
+  }
+}
+
+exports._insertTiket =  async ({ that, kontak }) => {
+  if(kontak.etiket) {
+    let res = await that.insertCell({
+      spreadsheetId: that.config.SHEET_ID,
+      range: `Sheet1!C${kontak.id+2}`,
+      values: kontak.etiket
+
+    })
+    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.etiket}, saved ${res.statusText}`)
+    return res
+  }
+}
+
+exports._insertHP =  async ({ that, kontak }) => {
+  if(kontak.no_hp){
+    let res = await that.insertCell({
+      spreadsheetId: that.config.SHEET_ID,
+      range: `Sheet1!D${kontak.id+2}`,
+      values: kontak.no_hp
+
+    })
+    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.no_hp}, saved ${res.statusText}`)
+    return res
+  }
+}
+
+exports._insertStatusB =  async ({ that, kontak, spreadsheetId }) => {
+  if(kontak.etiket) {
+    kontak.status = that.getStatus(kontak.etiket)
+    let res = await that.insertCell({
+      spreadsheetId,
+      range: `ALL DATA!O${kontak.id+2}`,
+      values: kontak.status
+    })
+    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.status}, saved ${res.statusText}`)
+    return res
+
+  }
+}
+
+exports._insertTiketB =  async ({ that, kontak, spreadsheetId }) => {
+  if(kontak.etiket) {
+    let res = await that.insertCell({
+      spreadsheetId,
+      range: `ALL DATA!P${kontak.id+2}`,
+      values: kontak.etiket
+    })
+    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.etiket}, saved ${res.statusText}`)
+    return res
+  }
+}
+
+exports._insertHPB =  async ({ that, kontak, spreadsheetId }) => {
+  if(kontak.no_hp){
+    let res = await that.insertCell({
+      spreadsheetId,
+      range: `ALL DATA!Q${kontak.id+2}`,
+      values: kontak.no_hp
+    })
+    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.no_hp}, saved ${res.statusText}`)
+    return res
+  }
+}
+
 /**
  * Prints the names and majors of students in a sample spreadsheet:
  * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
  */
-exports._listKontak =  async ({ that }) => {
+
+
+exports._listSheet =  async ({ that, SheetID, sheet }) => {
 
   const auth = await authorize()
 
   const sheets = google.sheets({version: 'v4', auth});
   return await new Promise ( (resolve, reject) => sheets.spreadsheets.values.get({
-    spreadsheetId: that.config.SHEET_ID,
-    range: 'Sheet1',
+    spreadsheetId: SheetID,
+    range: sheet,
   }, (err, res) => {
     that.spinner.start('start listing')
     if (err) reject('The API returned an error: ' + err);
@@ -126,54 +256,19 @@ exports._listKontak =  async ({ that }) => {
   }));
 }
 
-exports._insertTiket =  async ({ that, kontak }) => {
+exports._listKontak =  async ({ that }) => {
 
-  const auth = await authorize()
+  return await that.listSheet({
+    SheetID: that.config.SHEET_ID,
+    sheet: 'Sheet1'
+  })
 
-  const sheets = google.sheets({version: 'v4', auth});
-  return await new Promise ( (resolve, reject) => sheets.spreadsheets.values.update({
-    spreadsheetId: that.config.SHEET_ID,
-    range: `Sheet1!B${kontak.id+2}`,
-    valueInputOption:'USER_ENTERED',
-    requestBody: {
-      "values": [
-        [
-          `${kontak.etiket}`
-        ]
-      ],
-      "range": `Sheet1!B${kontak.id+2}`
-    }
-
-  }, (err, res) => {
-
-    err && console.log(err)
-    res && that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.etiket}, saved ${res.statusText}`)
-    resolve(Object.assign({}, kontak, res))
-  }));
 }
 
-exports._insertHP =  async ({ that, kontak }) => {
+exports._listSudah =  async ({ that }) => {
+  return await that.listSheet({
+    SheetID: that.config.SHEET_ID2,
+    sheet: 'etiket'
+  })
 
-  const auth = await authorize()
-
-  const sheets = google.sheets({version: 'v4', auth});
-  return await new Promise ( (resolve, reject) => sheets.spreadsheets.values.update({
-    spreadsheetId: that.config.SHEET_ID,
-    range: `Sheet1!C${kontak.id+2}`,
-    valueInputOption:'USER_ENTERED',
-    requestBody: {
-      "values": [
-        [
-          `${kontak.no_hp}`
-        ]
-      ],
-      "range": `Sheet1!C${kontak.id+2}`
-    }
-
-  }, (err, res) => {
-
-    err && console.log(err)
-    res && that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.no_hp}, saved ${res.statusText}`)
-    resolve(Object.assign({}, kontak, res))
-  }));
 }

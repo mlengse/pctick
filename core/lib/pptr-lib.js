@@ -65,4 +65,11 @@ exports._initBrowser = async ({ that }) => {
   that.page = that.pages[0]
   await that.page.goto(`${that.config.PCARE_URL}/Login`, waitOpt)
 
+  await that.runScript()
+
+  // await app.checkD2()
+
+  await that.page.goto(`${that.config.PCARE_URL}/EntriPenerimaVaksinKLB/Simplifikasi`, that.waitOpt)
+
+
 }
