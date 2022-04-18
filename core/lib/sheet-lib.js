@@ -7,7 +7,7 @@ exports.getStatus = etiket => {
     return 'Belum D1'
   }
   if(etiket.includes('sudah')){
-    if(etiket.includes('digunakan')){
+    if(etiket.includes('gunakan')){
       return 'Sudah booster'
     }
     if(etiket.includes('entry')){
