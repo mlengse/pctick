@@ -15,42 +15,43 @@ module.exports = async (isPM2) => {
       app.listSudah(),
       app.initBrowser()
     ])
-    // await 
 
-
-    for ([id, kontak] of listKontak.entries()){
-      kontak.id = id
-      if(!kontak.status){
-        if(!kontak.etiket && kontak.nik){
-          let ver = app.verifynik(kontak.nik)
-          if(!ver.salah){
-            let sudah = listSudah.filter( e => e.nik === kontak.nik)
-            if(sudah.length){
-              // console.log(sudah)
-              kontak.etiket = 'NIK etiket sudah digunakan'
-            } else {
-              kontak.nik = ver.nik
-              kontak.etiket = await app.checkNIK({ kontak })
-              if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
-                kontak.no_hp= await app.checkHP()
+    for ( kontak of listKontak){
+      kontak.id = `${kontak.sheet} ${kontak.row}`
+      if(
+        !kontak.status
+        && kontak.nik
+        ){
+          // if(!kontak.etiket){
+            let ver = app.verifynik(kontak.nik)
+            if(!ver.salah){
+              let sudah = listSudah.filter( e => e.nik === kontak.nik)
+              if(sudah.length){
+                kontak.etiket = 'NIK etiket sudah digunakan'
+              } else {
+                kontak.nik = ver.nik
+                kontak.etiket = await app.checkNIK({ kontak })
+                if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
+                  kontak.no_hp= await app.checkHP()
+                }
               }
+            } else {
+              kontak.etiket = ver.salah
             }
-          } else {
-            kontak.etiket = ver.salah
-          }
+
           await Promise.all([
             app.insertTiket({ kontak }),
             app.insertHP({ kontak }),
-            app.wait({time: app.getRandomInt(1700, 3500)})
-          ])
-        }
+            app.wait({time: app.getRandomInt(1700, 4000)}),
+          // ])
+          // }
 
-        await Promise.all([
-          app.insertStatus({ kontak }),
-          app.wait({time: app.getRandomInt(300, 500)})
-        ])
-  
-      }
+          // await Promise.all([
+            app.insertStatus({ kontak }),
+            // app.wait({time: app.getRandomInt(300, 500)})
+          ])
+    
+        }
 
 
     }

@@ -33,7 +33,7 @@ exports._checkNIK = async ({ that, kontak }) => {
 
     t++
 
-    that.spinner.start(`${kontak.id+2}: ${kontak.nik}${etiket? `, etiket: ${etiket}`: ''}${pesan?`, pesan: ${pesan}`: ''}`)
+    that.spinner.start(`${kontak.id}: ${kontak.nik}${etiket? `, etiket: ${etiket}`: ''}${pesan?`, pesan: ${pesan}`: ''}`)
 
   }
 
@@ -91,7 +91,7 @@ exports._checkNIK = async ({ that, kontak }) => {
 
   }
   
-  that.spinner.start(`${kontak.id+2}: ${kontak.nik}${etiket? `, etiket: ${etiket}`: ''}`)
+  that.spinner.start(`${kontak.id}: ${kontak.nik}${etiket? `, etiket: ${etiket}`: ''}`)
           
   // await that.wait({time: 1550})
 

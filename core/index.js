@@ -19,11 +19,19 @@ module.exports = class Core {
   }
 
   async close(isPM2){
-    if(this.browser){
-      !isPM2 && await this.browser.close()
-      isPM2 && this.browser.isConnected() && await this.browser.disconnect()
-    } 
     this.spinner.stop()
+    if(this.page) {
+      await this.page.close()
+      this.page = null
+    }
+
+    if(this.browser){
+      await this.browser.close()
+      this.browser = null
+    }
+
+
+
     this.spinner.succeed(`closed apps: ${new Date()}`)
   }
 

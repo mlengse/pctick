@@ -84,26 +84,6 @@ const getNewToken = async oAuth2Client => {
 }
 
 
-exports.getStatus = etiket => {
-  if(etiket.includes('tidak ditemukan')){
-    if(etiket.includes('pada tanggal')){
-      return 'Tunggu jadwal'
-    }
-    return 'Belum D1'
-  }
-  if(etiket.includes('sudah')){
-    if(etiket.includes('digunakan')){
-      return 'Sudah booster'
-    }
-    if(etiket.includes('entry')){
-      return 'Proses entry'
-    }
-  }
-  if(etiket.length){
-    return 'Belum lengkap'
-  }
-}
-
 exports._insertCell =  async ({ that, spreadsheetId, range, values }) => {
   const auth = await authorize()
 
@@ -133,84 +113,6 @@ exports._insertCell =  async ({ that, spreadsheetId, range, values }) => {
   }));
 }
 
-exports._insertStatus =  async ({ that, kontak }) => {
-  if(kontak.etiket && !kontak.status) {
-    kontak.status = that.getStatus(kontak.etiket)
-    let res = await that.insertCell({
-      spreadsheetId: that.config.SHEET_ID,
-      range: `Sheet1!B${kontak.id+2}`,
-      values: kontak.status
-
-    })
-    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.status}, saved ${res.statusText}`)
-    return res
-  }
-}
-
-exports._insertTiket =  async ({ that, kontak }) => {
-  if(kontak.etiket) {
-    let res = await that.insertCell({
-      spreadsheetId: that.config.SHEET_ID,
-      range: `Sheet1!C${kontak.id+2}`,
-      values: kontak.etiket
-
-    })
-    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.etiket}, saved ${res.statusText}`)
-    return res
-  }
-}
-
-exports._insertHP =  async ({ that, kontak }) => {
-  if(kontak.no_hp){
-    let res = await that.insertCell({
-      spreadsheetId: that.config.SHEET_ID,
-      range: `Sheet1!D${kontak.id+2}`,
-      values: kontak.no_hp
-
-    })
-    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.no_hp}, saved ${res.statusText}`)
-    return res
-  }
-}
-
-exports._insertStatusB =  async ({ that, kontak, spreadsheetId }) => {
-  if(kontak.etiket) {
-    kontak.status = that.getStatus(kontak.etiket)
-    let res = await that.insertCell({
-      spreadsheetId,
-      range: `ALL DATA!O${kontak.id+2}`,
-      values: kontak.status
-    })
-    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.status}, saved ${res.statusText}`)
-    return res
-
-  }
-}
-
-exports._insertTiketB =  async ({ that, kontak, spreadsheetId }) => {
-  if(kontak.etiket) {
-    let res = await that.insertCell({
-      spreadsheetId,
-      range: `ALL DATA!P${kontak.id+2}`,
-      values: kontak.etiket
-    })
-    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.etiket}, saved ${res.statusText}`)
-    return res
-  }
-}
-
-exports._insertHPB =  async ({ that, kontak, spreadsheetId }) => {
-  if(kontak.no_hp){
-    let res = await that.insertCell({
-      spreadsheetId,
-      range: `ALL DATA!Q${kontak.id+2}`,
-      values: kontak.no_hp
-    })
-    that.spinner.succeed(`${kontak.id+2} ${kontak.nik}, ${kontak.nama}, ${kontak.no_hp}, saved ${res.statusText}`)
-    return res
-  }
-}
-
 /**
  * Prints the names and majors of students in a sample spreadsheet:
  * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
@@ -218,11 +120,39 @@ exports._insertHPB =  async ({ that, kontak, spreadsheetId }) => {
  */
 
 
-exports._listSheet =  async ({ that, SheetID, sheet }) => {
+exports._listFile =  async ({ that, SheetID }) => {
+  const auth = await authorize()
+
+  const sheets = google.sheets({version: 'v4', auth});
+
+  const sheetData = await sheets.spreadsheets.get({ 
+    spreadsheetId: SheetID
+  })
+
+  let sheetProps = sheetData.data.sheets.map((sheet) => {
+    return {
+      sheet: sheet.properties.title,
+      file: sheetData.data.properties.title 
+    }
+  })
+
+  let ret = []
+
+  for(let ss of sheetProps){
+    let res = await that.listSheet({ SheetID, ss})
+    ret = ret.concat(...res)
+  }
+
+  return ret
+ 
+}
+
+exports._listSheet = async ({ that, SheetID, ss: {sheet, file} }) => {
 
   const auth = await authorize()
 
   const sheets = google.sheets({version: 'v4', auth});
+  
   return await new Promise ( (resolve, reject) => sheets.spreadsheets.values.get({
     spreadsheetId: SheetID,
     range: sheet,
@@ -234,7 +164,11 @@ exports._listSheet =  async ({ that, SheetID, sheet }) => {
       // Print columns A and E, which correspond to indices 0 and 4.
       const headers = rows[0].map(e => e.toLowerCase().split(' ').join('_'))
       rows.map((row, id) => {
-        let objRow = {}
+        let objRow = {
+          row: id+1,
+          sheet,
+          file
+        }
         if(id){
           row.map((col, id) => {
             if(col && col.length && headers[id]){
@@ -246,7 +180,7 @@ exports._listSheet =  async ({ that, SheetID, sheet }) => {
         // console.log(`${row[0]}, ${row[4]}`);
       });
       rows.shift()
-      that.spinner.succeed(`data found: ${rows.length}`)
+      that.spinner.succeed(`${file} ${sheet} data found: ${rows.length}`)
       resolve(rows)
 
     } else {
@@ -254,21 +188,4 @@ exports._listSheet =  async ({ that, SheetID, sheet }) => {
       resolve([]);
     }
   }));
-}
-
-exports._listKontak =  async ({ that }) => {
-
-  return await that.listSheet({
-    SheetID: that.config.SHEET_ID,
-    sheet: 'Sheet1'
-  })
-
-}
-
-exports._listSudah =  async ({ that }) => {
-  return await that.listSheet({
-    SheetID: that.config.SHEET_ID2,
-    sheet: 'etiket'
-  })
-
 }
