@@ -1,16 +1,16 @@
 
 exports.getStatus = etiket => {
-  if(etiket.includes('tidak ditemukan')){
-    if(etiket.includes('pada tanggal')){
+  if(etiket.toLowerCase().includes('tidak ditemukan')){
+    if(etiket.toLowerCase().includes('pada tanggal')){
       return 'Tunggu jadwal'
     }
     return 'Belum D1'
   }
-  if(etiket.includes('sudah')){
-    if(etiket.includes('gunakan')){
+  if(etiket.toLowerCase().includes('sudah')){
+    if(etiket.toLowerCase().includes('gunakan')){
       return 'Sudah booster'
     }
-    if(etiket.includes('entry')){
+    if(etiket.toLowerCase().includes('entry')){
       return 'Proses entry'
     }
   }
