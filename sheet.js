@@ -16,7 +16,9 @@ module.exports = async (isPM2) => {
       app.initBrowser()
     ])
 
-    for ( kontak of listKontak){
+    // for ( kontak of listKontak){
+    for ( kontak of app.diratain(listKontak)){
+    // for ( kontak of app.shuffleArray(listKontak)){
       kontak.id = `${kontak.sheet} ${kontak.row}`
       if(
         !kontak.status
@@ -28,12 +30,17 @@ module.exports = async (isPM2) => {
               let sudah = listSudah.filter( e => e.nik === kontak.nik)
               if(sudah.length){
                 kontak.etiket = 'NIK etiket sudah digunakan'
+                // await Promise.all([
+                //   app.insertTiket({ kontak }),
+                //   app.insertStatus({ kontak }),
+                // ])
               } else {
                 kontak.nik = ver.nik
                 kontak.etiket = await app.checkNIK({ kontak })
                 if(kontak.etiket.length && !kontak.etiket.toLowerCase().includes('nik')){
                   kontak.no_hp= await app.checkHP()
                 }
+                await app.wait({time: app.getRandomInt(1000, 3000)})
               }
             } else {
               kontak.etiket = ver.salah
@@ -42,13 +49,7 @@ module.exports = async (isPM2) => {
           await Promise.all([
             app.insertTiket({ kontak }),
             app.insertHP({ kontak }),
-            app.wait({time: app.getRandomInt(1700, 4000)}),
-          // ])
-          // }
-
-          // await Promise.all([
             app.insertStatus({ kontak }),
-            // app.wait({time: app.getRandomInt(300, 500)})
           ])
     
         }

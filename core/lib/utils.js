@@ -13,6 +13,8 @@ exports.getRandomSubarray = (arr, size) => {
   return shuffled.slice(0, size);
 };
 
+exports.shuffleArray = array => array.sort(() => 0.5 - Math.random());
+
 exports.getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -35,4 +37,55 @@ exports.verifynik = nik => {
     salah = 'NIK akhiran 0000'
   }
   return {nik, salah }
+}
+
+
+exports.getStatus = etiket => {
+  if(etiket.toLowerCase().includes('tidak ditemukan')){
+    if(etiket.toLowerCase().includes('pada tanggal')){
+      return 'Tunggu jadwal'
+    }
+    return 'Belum D1'
+  }
+  if(etiket.toLowerCase().includes('sudah')){
+    if(etiket.toLowerCase().includes('gunakan')){
+      return 'Sudah booster'
+    }
+    if(etiket.toLowerCase().includes('entry')){
+      return 'Proses entry'
+    }
+  }
+  if(etiket.toLowerCase().includes('gotong royong')){
+    return 'VGR'
+  }
+
+  if(etiket.length){
+    return 'Belum lengkap'
+  }
+}
+
+
+exports.diratain = arr => {
+  arr = arr.filter( e => !e.status && e.nik)
+  let pkm = [...new Set(arr.map( e => e.sheet))]
+  // console.log(pkm)
+  let obj = {}
+  for(pk of pkm){
+    obj[pk] = arr.filter( e => e.sheet === pk)
+  }
+
+  let nArr = []
+
+  while (nArr.length !== arr.length){
+    for(pk of pkm){
+      if(obj[pk].length){
+        let nu = obj[pk].shift()
+        nArr.push(nu)
+      }
+    }
+  }
+
+  return nArr
+
+
 }

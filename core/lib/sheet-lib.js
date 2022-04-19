@@ -1,24 +1,4 @@
 
-exports.getStatus = etiket => {
-  if(etiket.toLowerCase().includes('tidak ditemukan')){
-    if(etiket.toLowerCase().includes('pada tanggal')){
-      return 'Tunggu jadwal'
-    }
-    return 'Belum D1'
-  }
-  if(etiket.toLowerCase().includes('sudah')){
-    if(etiket.toLowerCase().includes('gunakan')){
-      return 'Sudah booster'
-    }
-    if(etiket.toLowerCase().includes('entry')){
-      return 'Proses entry'
-    }
-  }
-  if(etiket.length){
-    return 'Belum lengkap'
-  }
-}
-
 exports._insertStatus =  async ({ that, kontak }) => {
   if(kontak.etiket && !kontak.status) {
     kontak.status = that.getStatus(kontak.etiket)
@@ -48,10 +28,19 @@ exports._insertTiket =  async ({ that, kontak }) => {
 
 exports._insertHP =  async ({ that, kontak }) => {
   if(kontak.no_hp){
+    if(kontak.no_hp[0] !== '0' && kontak.no_hp[0] !== "'"){
+      kontak.no_hp = `'0${kontak.no_hp}`
+    } else if(kontak.no_hp[0] === '0'){
+      kontak.no_hp = `'${kontak.no_hp}`
+    } else if(kontak.no_hp[1] !== '0' && kontak.no_hp[0] === "'"){
+      kontak.no_hp = kontak.no_hp.substring(1)
+      kontak.no_hp = `'0${kontak.no_hp}`
+    }
+
     let res = await that.insertCell({
       spreadsheetId: that.config.SHEET_ID,
       range: `${kontak.sheet}!D${kontak.row}`,
-      values: kontak.no_hp
+      values: `${kontak.no_hp}`
 
     })
     that.spinner.succeed(`${kontak.id} ${kontak.nik}, ${kontak.nama}, ${kontak.no_hp}, saved ${res.statusText}`)
