@@ -83,8 +83,12 @@ const getNewToken = async oAuth2Client => {
   })
 }
 
+exports.tunggu = false
 
 exports._insertCell =  async ({ that, spreadsheetId, range, values }) => {
+  while(that.tunggu){
+    await that.wait({time: 100})
+  }
   const auth = await authorize()
 
   const sheets = google.sheets({version: 'v4', auth});
@@ -105,7 +109,9 @@ exports._insertCell =  async ({ that, spreadsheetId, range, values }) => {
     if(err && JSON.stringify(err).includes('rate')){
       let time = that.getRandomInt(150, 700)
       that.spinner.fail(`kena rate limit, wait for: ${time}`)
+      that.tunggu = true
       await that.wait({time})
+      that.tunggu = false
       res = await that.insertCell({ spreadsheetId, range, values})
     }
     // err && console.log(err)
@@ -134,7 +140,12 @@ exports._listFile =  async ({ that, SheetID }) => {
       sheet: sheet.properties.title,
       file: sheetData.data.properties.title 
     }
-  })
+  }).filter( e => {
+    if( !e.file.includes('list')){
+      return e.sheet === e.file
+    }
+    return true
+  } )
 
   let ret = []
 
@@ -167,7 +178,8 @@ exports._listSheet = async ({ that, SheetID, ss: {sheet, file} }) => {
         let objRow = {
           row: id+1,
           sheet,
-          file
+          file,
+          SheetID
         }
         if(id){
           row.map((col, id) => {
@@ -180,7 +192,7 @@ exports._listSheet = async ({ that, SheetID, ss: {sheet, file} }) => {
         // console.log(`${row[0]}, ${row[4]}`);
       });
       rows.shift()
-      that.spinner.succeed(`${file} ${sheet} data found: ${rows.length}`)
+      that.spinner.succeed(`${sheet} data found: ${rows.length}`)
       resolve(rows)
 
     } else {

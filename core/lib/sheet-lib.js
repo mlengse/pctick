@@ -1,9 +1,41 @@
+exports._listFiles = async ({ that }) =>{
+  let files = await that.listFile({
+    SheetID: that.config.SHEET_ID2
+  })
 
+  if(!that.listSudah){
+    that.listSudah = []
+  }
+
+  if(!that.listKontak){
+    that.listKontak = []
+  }
+
+  await Promise.all([...files.map( async file => {
+    let ret = await that.listFile({
+      SheetID: file.id
+    })
+    if(ret.length){
+      let sudah = ret.filter(k => k.status && k.status.toLowerCase().includes('sudah booster'))
+      if(sudah.length){
+        that.listSudah = that.listSudah.concat(...sudah)
+        that.spinner.succeed(`${file.nama} sudah booster ${sudah.length}`)
+      }
+      let kontak = ret.filter(k => !k.status && k.nik)
+      if(kontak.length){
+        that.listKontak = that.listKontak.concat(...kontak)
+        that.spinner.succeed(`${file.nama} akan dicek ${kontak.length}`)
+      }
+    }
+
+  })])
+
+}
 exports._insertStatus =  async ({ that, kontak }) => {
   if(kontak.etiket && !kontak.status) {
     kontak.status = that.getStatus(kontak.etiket)
     let res = await that.insertCell({
-      spreadsheetId: that.config.SHEET_ID,
+      spreadsheetId: kontak.SheetID,
       range: `${kontak.sheet}!B${kontak.row}`,
       values: kontak.status
 
@@ -16,7 +48,7 @@ exports._insertStatus =  async ({ that, kontak }) => {
 exports._insertTiket =  async ({ that, kontak }) => {
   if(kontak.etiket) {
     let res = await that.insertCell({
-      spreadsheetId: that.config.SHEET_ID,
+      spreadsheetId: kontak.SheetID,
       range: `${kontak.sheet}!C${kontak.row}`,
       values: kontak.etiket
 
@@ -38,7 +70,7 @@ exports._insertHP =  async ({ that, kontak }) => {
     }
 
     let res = await that.insertCell({
-      spreadsheetId: that.config.SHEET_ID,
+      spreadsheetId: kontak.SheetID,
       range: `${kontak.sheet}!D${kontak.row}`,
       values: `${kontak.no_hp}`
 
@@ -48,16 +80,16 @@ exports._insertHP =  async ({ that, kontak }) => {
   }
 }
 
-exports._listKontak =  async ({ that }) => {
-  return await that.listFile({
-    SheetID: that.config.SHEET_ID
-  })
+// exports._listKontak =  async ({ that }) => {
+//   return await that.listFile({
+//     SheetID: that.config.SHEET_ID
+//   })
 
-}
+// }
 
-exports._listSudah =  async ({ that }) => {
-  return await that.listFile({
-    SheetID: that.config.SHEET_ID2
-  })
+// exports._listSudah =  async ({ that }) => {
+//   return await that.listFile({
+//     SheetID: that.config.SHEET_ID2
+//   })
 
-}
+// }

@@ -10,14 +10,13 @@ module.exports = async (isPM2) => {
 
   try{
 
-    let [listKontak, listSudah ] = await Promise.all([
-      app.listKontak(),
-      app.listSudah(),
+    await Promise.all([
+      app.listFiles(),
       app.initBrowser()
     ])
 
     // for ( kontak of listKontak){
-    for ( kontak of app.diratain(listKontak)){
+    for ( kontak of app.diratain(app.listKontak)){
     // for ( kontak of app.shuffleArray(listKontak)){
       kontak.id = `${kontak.sheet} ${kontak.row}`
       if(
@@ -27,7 +26,7 @@ module.exports = async (isPM2) => {
           // if(!kontak.etiket){
             let ver = app.verifynik(kontak.nik)
             if(!ver.salah){
-              let sudah = listSudah.filter( e => e.nik === kontak.nik)
+              let sudah = app.listSudah.filter( e => e.nik === kontak.nik)
               if(sudah.length){
                 kontak.etiket = 'NIK etiket sudah digunakan'
                 // await Promise.all([
