@@ -142,7 +142,8 @@ exports._listFile =  async ({ that, SheetID }) => {
     }
   }).filter( e => {
     if( !e.file.includes('list')){
-      return e.sheet === e.file
+      return !e.sheet.toLowerCase().includes('pivot')
+      // return e.sheet === e.file
     }
     return true
   } )

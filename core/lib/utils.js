@@ -59,8 +59,18 @@ exports.getStatus = etiket => {
     return 'VGR'
   }
 
-  if(etiket.length && !etiket.includes('NIK')){
-    return 'Belum lengkap'
+  if(etiket.length){
+    if(etiket.charAt(2)==='-'){
+      return 'Belum booster'
+
+    }
+    if(etiket.charAt(1)==='-'){
+      return 'Belum D2'
+    }
+
+  }
+  if(etiket.includes('NIK ×')){
+    return 'Lihat ket'
   }
   return ""
 }
