@@ -15,12 +15,17 @@ module.exports = async (isPM2) => {
       app.initBrowser()
     ])
 
+    let diratain = app.diratain(app.listKontak)
+
     // for ( kontak of listKontak){
-    for ( kontak of app.diratain(app.listKontak)){
+    for ( kontak of diratain){
     // for ( kontak of app.shuffleArray(listKontak)){
-      kontak.id = `${kontak.sheet} ${kontak.row}`
+      kontak.id = `${kontak.kel ? `kel-${kontak.kel}` : kontak.kec ? `kec-${kontak.kec}` : `sheet-${kontak.sheet}`} ${kontak.row}`
       if(
-        !kontak.status
+        (!kontak.status
+          // || kontak.status.includes("Belum")
+          // || kontak.status.includes("entry")
+          )
         && kontak.nik
         ){
           // if(!kontak.etiket){

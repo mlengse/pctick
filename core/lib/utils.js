@@ -78,23 +78,52 @@ exports.getStatus = etiket => {
 
 exports.diratain = arr => {
   arr = arr.filter( e => !e.status && e.nik)
-  let pkm = [...new Set(arr.map( e => e.sheet))]
-  // console.log(pkm)
-  let obj = {}
+  let kel = [...new Set(arr.map( e => e.kel))].sort((a,b) => arr.filter(e=>e.kel === b).length - arr.filter(e=>e.kel === a).length )
+  let pkm = [...new Set(arr.map( e => e.sheet))].sort((a,b) => arr.filter(e=>e.pkm === b).length - arr.filter(e=>e.pkm === a).length )
+  let obj = {
+    kel: {},
+    pkm: {}
+  }
+  for(ke of kel){
+    if(ke && ke.length){
+      obj.kel[ke] = arr.filter( e => e.kel === ke)
+    }
+  }
+
   for(pk of pkm){
-    obj[pk] = arr.filter( e => e.sheet === pk)
+    obj.pkm[pk] = arr.filter( e => e.sheet === pk)
   }
 
   let nArr = []
+  let udah = false
 
-  while (nArr.length !== arr.length){
-    for(pk of pkm){
-      if(obj[pk].length){
-        let nu = obj[pk].shift()
+  while (!udah && nArr.length !== arr.length){
+    for(ke of kel){
+      if(obj.kel[ke] && obj.kel[ke].length){
+        let nu = obj.kel[ke].shift()
         nArr.push(nu)
-      }
+        console.log(`${nArr.length}, ${arr.length}`)
+      } 
     }
+    for(pk of pkm){
+      if(obj.pkm[pk].length){
+        let nu = obj.pkm[pk].shift()
+        if(nArr.map(e => e.nik).indexOf(nu.nik) === -1){
+          nArr.push(nu)
+          console.log(`${nArr.length}, ${arr.length}`)
+          // that.spinner.start(`${nArr.length}, ${arr.length}`)
+        } 
+      } 
+    }
+    udah = !Object.keys(obj.pkm).map(e=>obj.pkm[e].length).filter(e => e).length
+    if(udah){
+      console.log(Object.keys(obj.kel).reduce((p,c) => `${p}, ${c}: ${obj.kel[c].length}`, 'obj.kel'))
+      console.log(Object.keys(obj.pkm).reduce((p,c) => `${p}, ${c}: ${obj.pkm[c].length}`, 'obj.pkm'))
+    }
+
   }
+
+  // that.spinner.succeed()
 
   return nArr
 

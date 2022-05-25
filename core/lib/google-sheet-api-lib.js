@@ -193,7 +193,7 @@ exports._listSheet = async ({ that, SheetID, ss: {sheet, file} }) => {
         // console.log(`${row[0]}, ${row[4]}`);
       });
       rows.shift()
-      that.spinner.succeed(`${sheet} data found: ${rows.length}`)
+      that.spinner.succeed(`sheet ${sheet} data found: ${rows.length}`)
       resolve(rows)
 
     } else {

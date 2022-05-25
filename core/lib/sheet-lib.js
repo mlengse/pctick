@@ -15,15 +15,16 @@ exports._listFiles = async ({ that }) =>{
     let ret = await that.listFile({
       SheetID: file.id
     })
+
     if(ret.length){
       let sudah = ret.filter(k => k.status && k.status.toLowerCase().includes('sudah booster'))
       if(sudah.length){
-        that.listSudah = that.listSudah.concat(...sudah)
+        that.listSudah = [...that.listSudah, ...sudah]
         that.spinner.succeed(`${file.nama} sudah booster ${sudah.length}`)
       }
       let kontak = ret.filter(k => !k.status && k.nik)
       if(kontak.length){
-        that.listKontak = that.listKontak.concat(...kontak)
+        that.listKontak = [...that.listKontak, ...kontak]
         that.spinner.succeed(`${file.nama} akan dicek ${kontak.length}`)
       }
     }
